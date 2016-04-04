@@ -1,0 +1,12 @@
+<%= simple_form_for(@shift_job) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :shift_id %>
+    <%= f.input :job_id %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

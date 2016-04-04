@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :users
+  resources :store_flavors
+  resources :flavors
+  resources :jobs
+  resources :shift_jobs
+  resources :shifts
   # Routes for main resources
   resources :stores
   resources :employees
