@@ -28,7 +28,7 @@ FactoryGirl.define do
   end
 
   factory :shift do
-    assignment_id 1
+    assignment_id 3
     date 1.month.ago
     start_time 12:00:00
     end_time 18:00:00
@@ -48,7 +48,7 @@ FactoryGirl.define do
 
   factory :user do
     employee_id 1
-    email "alex@example.com"
+    email "gruberman@example.com"
     password_digest "secret"
   end
 
