@@ -27,4 +27,29 @@ FactoryGirl.define do
     pay_level 1
   end
 
+  factory :shift do
+    assignment_id 1
+    date 1.month.ago
+    start_time 12:00:00
+    end_time 18:00:00
+    notes "Nothing Special"
+  end
+
+  factory :job do
+    name "Cashier"
+    description "Worked at the register to handle transactions"
+    active 1
+  end
+
+  factory :flavor do
+    name "Chocolate"
+    active 1
+  end
+
+  factory :user do
+    employee_id 1
+    email "alex@example.com"
+    password_digest "secret"
+  end
+
 end
