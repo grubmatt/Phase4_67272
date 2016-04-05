@@ -2,8 +2,12 @@ require 'test_helper'
 
 class EmployeeTest < ActiveSupport::TestCase
   # Test relationships
+  should have_one(:user)
   should have_many(:assignments)
   should have_many(:stores).through(:assignments)
+  should have_many(:shifts).through(:assignments)
+
+
   
   # Test basic validations
   should validate_presence_of(:first_name)
