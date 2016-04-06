@@ -2,6 +2,9 @@ class Employee < ActiveRecord::Base
   # Callbacks
   before_save :reformat_phone
   before_validation :reformat_ssn
+  #before_destroy :check_association
+  #after_rollback :attempt_make_inactive
+
     
   # Relationships
   has_many :assignments
@@ -58,7 +61,30 @@ class Employee < ActiveRecord::Base
   
   # Callback code  (NOT DRY!!!)
   # -----------------------------
-   private
+  private
+  def attempt_make_inactive
+    make_inactive unless self.destroyed?
+  end
+
+  def make_inactive
+    self.active = 0
+    self.assignments.current.first.update_attribute(:end_date, Date.today)
+    shifts = self.shifts.upcoming.to_a
+    shifts do |shift|
+      shift.destroy
+    end
+    self.save
+  end
+
+  def check_association
+    if self.shifts.size != 0
+      return false
+    else
+      self.assignments.first.destroy unless self.assignments.first == nil
+      self.user.destroy unless self.user.destroy == nil
+    end
+  end
+
    def reformat_phone
      phone = self.phone.to_s  # change to string in case input as all numbers 
      phone.gsub!(/[^0-9]/,"") # strip all non-digits
