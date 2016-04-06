@@ -1,6 +1,8 @@
 class Store < ActiveRecord::Base
   # Callbacks
   before_save :reformat_phone
+  before_destroy :cancel_destroy
+  after_rollback :make_inactive
   
   # Relationships
   has_many :assignments
@@ -29,6 +31,18 @@ class Store < ActiveRecord::Base
   # Misc Constants
   STATES_LIST = [['Ohio', 'OH'],['Pennsylvania', 'PA'],['West Virginia', 'WV']]
   
+  def get_store_coordinates
+    coord = Geocoder.coordinates("#{self.street}, #{self.state}")
+    if coord
+      self.latitude = coord[0]
+      self.longitude = coord[1]
+      self.save
+    else 
+      errors.add(:base, "Error with geocoding")
+    end
+    coord
+  end
+
   
   # Callback code
   # -----------------------------
@@ -38,6 +52,15 @@ class Store < ActiveRecord::Base
     phone = self.phone.to_s  # change to string in case input as all numbers 
     phone.gsub!(/[^0-9]/,"") # strip all non-digits
     self.phone = phone       # reset self.phone to new string
+  end
+
+  def cancel_destroy
+    return false
+  end
+
+  def make_inactive
+    self.active = 0
+    self.save
   end
 
 end

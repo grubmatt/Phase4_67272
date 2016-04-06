@@ -2,7 +2,7 @@ class Employee < ActiveRecord::Base
   # Callbacks
   before_save :reformat_phone
   before_validation :reformat_ssn
-  
+    
   # Relationships
   has_many :assignments
   has_many :stores, through: :assignments

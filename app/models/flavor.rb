@@ -15,6 +15,7 @@ class Flavor < ActiveRecord::Base
   def cancel_destroy
   	return false
   end
+  
   def make_inactive
   	self.active = 0
   	self.save

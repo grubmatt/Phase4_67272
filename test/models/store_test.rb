@@ -4,6 +4,8 @@ class StoreTest < ActiveSupport::TestCase
   # Test relationships
   should have_many(:assignments)
   should have_many(:employees).through(:assignments)
+  should have_many(:store_flavors)
+  should have_many(:flavors).through(:store_flavors)
 
   # Test basic validations
   should validate_presence_of(:name)
@@ -83,6 +85,17 @@ class StoreTest < ActiveSupport::TestCase
       assert_equal 1, Store.inactive.size
       assert_equal ["Hazelwood"], Store.inactive.alphabetical.map{|s| s.name}
     end
-  
+    
+    should "show that get_store_coordinates updates store with correct lat and long" do
+      @cmu.get_store_coordinates
+      assert_equal 40.4446314, @cmu.latitude
+      assert_equal -79.94288420000001, @cmu.longitude
+    end
+
+    should "Show that stores are never deleted, only made inactive" do
+      @cmu.destroy
+      assert_equal 2, Store.inactive.size
+      assert_equal ["CMU", "Hazelwood"], Store.inactive.map{|i| i.name}.sort
+    end
   end
 end

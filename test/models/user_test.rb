@@ -1,7 +1,21 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  should belong_to(:employee)
+
+  
+
+  context "Creating a context for Users" do
+  	# create the objects I want with factories
+    setup do 
+      create_users
+    end
+    
+    # and provide a teardown method as well
+    teardown do
+      remove_users
+    end
+
+    should "Be c"
+  end
 end

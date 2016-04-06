@@ -77,6 +77,8 @@ ActiveRecord::Schema.define(version: 20160404204008) do
     t.string  "state"
     t.string  "zip"
     t.string  "phone"
+    t.float   "latitude"
+    t.float   "longitude"
     t.boolean "active", default: true
   end
 

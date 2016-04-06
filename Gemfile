@@ -34,6 +34,8 @@ gem 'simple_form', '3.2.1'
 gem 'will_paginate', '3.1.0'
 gem 'foundation-rails', '5.5.3.2'
 gem 'font-awesome-sass-rails', '3.0.2.2'
+gem 'geocoder'
+
 
 
 group :development, :test do
