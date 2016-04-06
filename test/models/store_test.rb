@@ -88,8 +88,8 @@ class StoreTest < ActiveSupport::TestCase
     
     should "show that get_store_coordinates updates store with correct lat and long" do
       @cmu.get_store_coordinates
-      assert_equal 40.4446314, @cmu.latitude
-      assert_equal -79.94288420000001, @cmu.longitude
+      assert_equal 40.4434658, @cmu.latitude
+      assert_equal -79.9434567, @cmu.longitude
     end
 
     should "Show that stores are never deleted, only made inactive" do

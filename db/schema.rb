@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 20160404204008) do
     t.string  "phone"
     t.float   "latitude"
     t.float   "longitude"
-    t.boolean "active", default: true
+    t.boolean "active",    default: true
   end
 
   create_table "users", force: :cascade do |t|
