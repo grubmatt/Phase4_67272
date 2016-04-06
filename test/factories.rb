@@ -28,7 +28,6 @@ FactoryGirl.define do
   end
 
   factory :shift do
-    assignment_id 3
     date 1.month.ago
     start_time 12:00:00
     end_time 18:00:00
@@ -39,6 +38,10 @@ FactoryGirl.define do
     name "Cashier"
     description "Worked at the register to handle transactions"
     active 1
+  end
+
+  factory :shift_job do
+    job_id 1
   end
 
   factory :flavor do

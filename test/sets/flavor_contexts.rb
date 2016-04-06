@@ -1,8 +1,8 @@
 module Contexts
   module FlavorContexts
   	def create_flavors
+      @vanilla = FactoryGirl.create(:flavor, name: "Vanilla", active: 0)
   	  @chocolate = FactoryGirl.create(:flavor)
-  	  @vanilla = FactoryGirl.create(:flavor, name: "Vanilla", active: 0)
   	end
 
   	def remove_flavors
