@@ -41,7 +41,7 @@ FactoryGirl.define do
   end
 
   factory :shift_job do
-    job_id 1
+    shift_id 1
   end
 
   factory :flavor do
