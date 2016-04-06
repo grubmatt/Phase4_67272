@@ -35,16 +35,21 @@ class JobTest < ActiveSupport::TestCase
 
     should "Show that job can only be deleted if the job has 
       never been worked by an employee; otherwise it is made inactive" do
-      @ben = FactoryGirl.create(:assignment, employee: @ben, store: @cmu, start_date: 6.months.ago.to_date, end_date: nil, pay_level: 4)
+      @cmu = FactoryGirl.create(:store)
+      @ben = FactoryGirl.create(:employee, first_name: "Ben", last_name: "Sisko", role: "manager", phone: "412-268-2323")
+      @ben_ass = FactoryGirl.create(:assignment, employee: @ben, store: @cmu, start_date: 6.months.ago.to_date, end_date: nil, pay_level: 4)
       @shift_ben = FactoryGirl.create(:shift, assignment_id: 1)
       @shift_cash = FactoryGirl.create(:shift_job, shift_id: 1)
 
       @cashier.destroy
       assert_equal 2, Job.inactive.size
       assert_equal ["Cashier", "Mopper"], Job.inactive.map{|i| i.name}.sort
+      
       @shift_cash.destroy
       @shift_ben.destroy
+      @ben_ass.destroy
       @ben.destroy
+      @cmu.destroy
     end
   end
 end

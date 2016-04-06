@@ -29,8 +29,8 @@ class FlavorTest < ActiveSupport::TestCase
     end
 
     should "List the flavors in alphabetical order" do
-      assert_equal 2, Job.alphabetical.size
-      assert_equal ["Chocolate", "Vanilla"], Job.alphabetical.map{|i| i.name}.sort
+      assert_equal 2, Flavor.alphabetical.size
+      assert_equal ["Chocolate", "Vanilla"], Flavor.alphabetical.map{|i| i.name}.sort
     end
 
     should "Show that flavors are never deleted, only made inactive" do

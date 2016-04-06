@@ -29,8 +29,8 @@ FactoryGirl.define do
 
   factory :shift do
     date 1.month.ago
-    start_time 12:00:00
-    end_time 18:00:00
+    start_time '12:00:00'
+    end_time '18:00:00'
     notes "Nothing Special"
   end
 

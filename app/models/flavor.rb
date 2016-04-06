@@ -8,4 +8,15 @@ class Flavor < ActiveRecord::Base
   scope :inactive,        -> { where(active: false) }
   scope :alphabetical,    -> { order('name') }
 
+  before_destroy :cancel_destroy
+  after_rollback :make_inactive
+
+  private
+  def cancel_destroy
+  	return false
+  end
+  def make_inactive
+  	self.active = 0
+  	self.save
+  end
 end
