@@ -16,6 +16,5 @@ class UserTest < ActiveSupport::TestCase
       remove_users
     end
 
-    should "Be c"
   end
 end

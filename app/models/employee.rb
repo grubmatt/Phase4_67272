@@ -2,8 +2,8 @@ class Employee < ActiveRecord::Base
   # Callbacks
   before_save :reformat_phone
   before_validation :reformat_ssn
-  #before_destroy :check_association
-  #after_rollback :attempt_make_inactive
+  before_destroy :check_association
+  after_rollback :attempt_make_inactive
 
     
   # Relationships
@@ -68,20 +68,16 @@ class Employee < ActiveRecord::Base
 
   def make_inactive
     self.active = 0
-    self.assignments.current.first.update_attribute(:end_date, Date.today)
-    shifts = self.shifts.upcoming.to_a
-    shifts do |shift|
-      shift.destroy
-    end
+    self.assignments.current.first.update_attribute(:end_date, Date.today) unless self.assignments.current.first == nil
     self.save
   end
 
   def check_association
-    if self.shifts.size != 0
-      return false
+    if self.shifts.size == 0
+      self.assignments.current.first.destroy unless self.assignments.current.first == nil
+      self.user.destroy unless self.user == nil
     else
-      self.assignments.first.destroy unless self.assignments.first == nil
-      self.user.destroy unless self.user.destroy == nil
+      return false
     end
   end
 

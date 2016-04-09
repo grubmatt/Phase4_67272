@@ -29,13 +29,20 @@ class Assignment < ActiveRecord::Base
 
   # Private methods for callbacks and custom validations
   private  
-  
+  def destroy_future_shifts
+    shifts = self.shifts.upcoming.to_a
+    shifts do |shift|
+      shift.destroy
+    end
+  end
+
   def end_previous_assignment
     current_assignment = Employee.find(self.employee_id).current_assignment
     if current_assignment.nil?
       return true 
     else
       current_assignment.update_attribute(:end_date, self.start_date.to_date)
+      #destroy_future_shifts
     end
   end
   
