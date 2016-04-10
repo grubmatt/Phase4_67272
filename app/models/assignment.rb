@@ -34,7 +34,7 @@ class Assignment < ActiveRecord::Base
   def destroy_future_shifts
     shifts = self.shifts.upcoming
     shifts do |shift|
-      shift.delete!
+      shift.delete
     end
   end
 

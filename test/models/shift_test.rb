@@ -27,7 +27,7 @@ class ShiftTest < ActiveSupport::TestCase
 
     should "Assure that an end_time cant be before the start_time" do
       @bad_shift = FactoryGirl.build(:shift)
-      @bad_shift.end_time = "9:00:00"
+      @bad_shift.end_time = @bad_shift.start_time - 1.hours
       assert !@bad_shift.valid?
     end
 
@@ -65,19 +65,23 @@ class ShiftTest < ActiveSupport::TestCase
     end
 
     should "Check if end_time automatically set" do
-      @another_shift = FactoryGirl.create(:shift, start_time: "12:00:00")
-      assert @another_shift.end_time == "2000-01-01 15:00:00 UTC"
+      @another_shift = FactoryGirl.create(:shift, start_time: Date.current + 2.hours)
+      assert @another_shift.end_time == Date.current + 5.hours
       @another_shift.destroy
     end
 
     should "Check if start_now works" do
-      @current_shift.start_now
-      assert @current_shift.start_time == Time.now
+      @another_shift = FactoryGirl.create(:shift, start_time: Date.current + 2.hours)
+      @another_shift.start_now
+      @another_shift.reload
+      assert @another_shift.start_time == Time.now
     end
 
     should "Check if end_now works" do
-      @current_shift.end_now
-      assert @current_shift.end_time == Time.now
+      @another_shift = FactoryGirl.create(:shift, start_time: Date.current + 2.hours)
+      @another_shift.end_now
+      @another_shift.reload
+      assert @another_shift.end_time == Time.now
     end
 
     should "have a scope completed that works" do
@@ -86,14 +90,14 @@ class ShiftTest < ActiveSupport::TestCase
       @job_cash = FactoryGirl.create(:job)
       @shift_job_cash = FactoryGirl.create(:shift_job, shift_id: 3, job_id: 1)
 
-      assert_equal [3], Shift.completed.map{|i| i.shift_id}
+      assert_equal [3], Shift.completed.map{|i| i.id}
       @past_shift.destroy
       @job_cash.destroy
       @shift_job_cash.destroy
     end
 
     should "have a scope incompleted that works" do
-      assert_equal [1,2], Shift.incompleted.map{|i| i.shift_id}.sort
+      assert_equal [1,2], Shift.incompleted.map{|i| i.id}.sort
     end
 
     should "have a scope for_store that works" do

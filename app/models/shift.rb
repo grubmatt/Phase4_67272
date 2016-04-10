@@ -15,7 +15,7 @@ class Shift < ActiveRecord::Base
   validate :assignment_is_active_in_system, on: :create
 
   scope :completed,     -> { joins(:shift_jobs) }
-  scope :incompleted,   -> { leftjoins(:shift_jobs)}
+  scope :incompleted,   -> { joins("LEFT JOIN shift_jobs ON shift_id")}
   scope :for_store,     -> (store_id) { joins(:assignment).where("store_id = ?", store_id) }
   scope :for_employee,  -> (employee_id) { joins(:assignment).where("employee_id = ?", employee_id) }
   scope :past,          -> { where("date < ?", Date.current) }
@@ -27,19 +27,15 @@ class Shift < ActiveRecord::Base
   scope :by_employee,   -> { joins(:employee).order("employees.last_name, employees.first_name") }
 
   def completed?
-    return false unless self.shift_jobs.to_a.size != 0
+    return false unless self.shift_jobs.to_a.size == 0
   end
 
   def start_now
-  	#self.update_attribute(:start_time, Time.now)
-    self.start_time = Time.now
-    self.save
+  	self.update_attribute(:start_time, Time.now)
   end
 
   def end_now
-    #self.update_attribute(:end_time, Time.now)
-    self.end_time = Time.now
-    self.save
+    self.update_attribute(:end_time, Time.now)
   end
 
   private

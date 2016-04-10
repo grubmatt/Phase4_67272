@@ -26,13 +26,13 @@ class UserTest < ActiveSupport::TestCase
     # and provide a teardown method as well
     teardown do
       @ed.destroy
-      @gruberman.destroy
     end
 
     should "Assure that user can only be added to an active employee" do
       assert @gruberman.valid?
-      @bad_user = FactoryGirl.build(:user, employee_id: 12)
+      @bad_user = FactoryGirl.build(:user, email:"bad@example.com", employee_id: 12)
       assert !@bad_user.valid?
+      @bad_user.destroy
     end
 
     should "Show that user is automatically deleted when employee is deleted" do

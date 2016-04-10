@@ -4,7 +4,7 @@ module Contexts
     #NEEDS TO BE ADDED TO TO PROPERLY TEST ALL FUNCTIONS
   	def create_shifts
   	  @current_shift = FactoryGirl.create(:shift)
-  	  @future_shift = FactoryGirl.create(:shift, date: Date.current + 5, start_time: "9:00:00")
+  	  @future_shift = FactoryGirl.create(:shift, date: Date.current + 5, start_time: Date.current + 3.hours)
   	end
 
   	def remove_shifts

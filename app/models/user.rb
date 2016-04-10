@@ -1,14 +1,17 @@
 class User < ActiveRecord::Base
   belongs_to :employee
 
+  has_secure_password
+
   # Validations
-  validate_uniqueness_of :email
+  validate_uniqueness_of :email, :employee_id
+  validates_presence_of :password, on: :create
   validate :employee_is_active_in_system, on: :create
-  validates_format_of :email, :with => /^[-a-z0-9_+\.]+\@([-a-z0-9]+\.)+[a-z0-9]{2,4}$/i
+  validates_format_of :email, with: /\A[\w]([^@\s,;]+)@(([\w-]+\.)+(com|edu|org|net|gov|mil|biz|info))\z/i, message: "is not a valid format"
 
   private
   def employee_is_active_in_system
-    all_active_employees = Employee.active.all.map{|e| e.id}
+    all_active_employees = Employee.active.map(&:id)
     unless all_active_employees.include?(self.employee_id)
       errors.add(:employee_id, "is not an active employee at the creamery")
     end

@@ -30,7 +30,7 @@ FactoryGirl.define do
   factory :shift do
     date Date.current
     assignment_id 1
-    start_time '12:00:00'
+    start_time Date.current + 2.hours
     notes "Nothing Special"
   end
 

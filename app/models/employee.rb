@@ -10,7 +10,7 @@ class Employee < ActiveRecord::Base
   has_many :assignments
   has_many :stores, through: :assignments
   has_many :shifts, through: :assignments
-  has_one :user
+  has_one :user, dependent: :destroy
 
   
   # Validations
@@ -74,7 +74,6 @@ class Employee < ActiveRecord::Base
   end
 
   def check_association
-    self.user.delete unless self.user == nil
     if self.shifts.size == 0
       self.assignments.current.first.delete unless self.assignments.current.first == nil
     else
