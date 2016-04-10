@@ -126,6 +126,7 @@ class AssignmentTest < ActiveSupport::TestCase
       @third_ben = FactoryGirl.create(:assignment, employee: @ben, store: @cmu, start_date: Date.current, end_date: nil, pay_level: 5)
       assert @future_shift.destroyed?
       @third_ben.destroy
+      @future_shift.destroy 
     end
 
     should "terminate an assignment instead of destroying it if shifts have been worked" do
