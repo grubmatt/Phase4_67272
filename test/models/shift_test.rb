@@ -56,7 +56,7 @@ class ShiftTest < ActiveSupport::TestCase
       assert !@past_shift.completed?
 
       @job_cash = FactoryGirl.create(:job)
-      @shift_job_cash = FactoryGirl.create(:shift_job, shift_id: 3, job_id: 1)
+      @shift_job_cash = FactoryGirl.create(:shift_job, shift: @past_shift, job: @job_cash)
       assert @past_shift.completed?
      
       @past_shift.destroy
@@ -73,15 +73,15 @@ class ShiftTest < ActiveSupport::TestCase
     should "Check if start_now works" do
       @another_shift = FactoryGirl.create(:shift, start_time: Date.current + 2.hours)
       @another_shift.start_now
-      @another_shift.reload
-      assert @another_shift.start_time == Time.now
+      assert_in_delta 1, Time.now.to_i, @another_shift.start_time.to_i
+      @another_shift.destroy
     end
 
     should "Check if end_now works" do
       @another_shift = FactoryGirl.create(:shift, start_time: Date.current + 2.hours)
       @another_shift.end_now
-      @another_shift.reload
-      assert @another_shift.end_time == Time.now
+      assert_in_delta 1, Time.now.to_i, @another_shift.end_time.to_i
+      @another_shift.destroy
     end
 
     should "have a scope completed that works" do
