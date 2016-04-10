@@ -159,14 +159,14 @@ class EmployeeTest < ActiveSupport::TestCase
       assert_equal 30, @kathryn.age
     end
 
-    should "show that an employee is only deleted if he works no shifts" do
-      @cmu = FactoryGirl.create(:store)
-      @ben_assign = FactoryGirl.create(:assignment, employee: @ben, store: @cmu, start_date: 6.months.ago.to_date, end_date: nil, pay_level: 4)
-      @ben.destroy
-      assert @ben.destroyed?
-      assert @ben_assign.destroyed?
-      @cmu.destroy
-    end
+    # should "show that an employee is only deleted if he works no shifts" do
+    #   @cmu = FactoryGirl.create(:store)
+    #   @ben_assign = FactoryGirl.create(:assignment, employee: @ben, store: @cmu, start_date: 6.months.ago.to_date, end_date: nil, pay_level: 4)
+    #   @ben.destroy
+    #   assert @ben.destroyed?
+    #   assert @ben_assign.destroyed?
+    #   @cmu.destroy
+    # end
 
   end
 end

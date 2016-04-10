@@ -120,5 +120,21 @@ class AssignmentTest < ActiveSupport::TestCase
       assert_equal 1.day.ago.to_date, @kathryn.assignments.first.end_date
       @promote_kathryn.destroy
     end
+
+    should "end upcoming shifts when assignment is terminated" do
+      @future_shift = FactoryGirl.create(:shift, assignment_id: 3, date: Date.current+2)
+      @third_ben = FactoryGirl.create(:assignment, employee: @ben, store: @cmu, start_date: Date.current, end_date: nil, pay_level: 5)
+      assert @future_shift.destroyed?
+      @third_ben.destroy
+    end
+
+    should "terminate an assignment instead of destroying it if shifts have been worked" do
+      @past_shift = FactoryGirl.create(:shift, assignment_id: 4)
+      @past_shift.update_attribute(:date, Date.current-5)
+      @assign_cindy.destroy
+      assert !@assign_cindy.destroyed?
+      assert_equal 1, Assignment.past.for_employee(@cindy.id).size
+      @past_shift.destroy
+    end  
   end
 end

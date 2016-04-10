@@ -4,6 +4,8 @@ class ShiftTest < ActiveSupport::TestCase
   should have_many(:shift_jobs)
   should have_many(:jobs).through(:shift_jobs)
   should belong_to(:assignment)
+  should have_one(:store).through(:assignment)
+  should have_one(:employee).through(:assignment)
 
   should validate_presence_of(:date)
   should validate_presence_of(:start_time)
@@ -40,7 +42,7 @@ class ShiftTest < ActiveSupport::TestCase
     end
 
     should "Assure that a past shift cant be deleted" do
-      @past_shift = FactoryGirl.build(:shift, end_time: "14:00:00")
+      @past_shift = FactoryGirl.create(:shift)
       @past_shift.update_attribute(:date, Date.current-5)
       @past_shift.destroy
       assert !@past_shift.destroyed?
@@ -48,8 +50,119 @@ class ShiftTest < ActiveSupport::TestCase
       assert @future_shift.destroyed?
     end
 
-    should "Check if a shift is completed" do
+    should "Check if completed? works" do
+      @past_shift = FactoryGirl.create(:shift)
+      @past_shift.update_attribute(:date, Date.current-5)
+      assert !@past_shift.completed?
 
+      @job_cash = FactoryGirl.create(:job)
+      @shift_job_cash = FactoryGirl.create(:shift_job, shift_id: 3, job_id: 1)
+      assert @past_shift.completed?
+     
+      @past_shift.destroy
+      @job_cash.destroy
+      @shift_job_cash.destroy
+    end
+
+    should "Check if end_time automatically set" do
+      @another_shift = FactoryGirl.create(:shift, start_time: "12:00:00")
+      assert @another_shift.end_time == "2000-01-01 15:00:00 UTC"
+      @another_shift.destroy
+    end
+
+    should "Check if start_now works" do
+      @current_shift.start_now
+      assert @current_shift.start_time == Time.now
+    end
+
+    should "Check if end_now works" do
+      @current_shift.end_now
+      assert @current_shift.end_time == Time.now
+    end
+
+    should "have a scope completed that works" do
+      @past_shift = FactoryGirl.create(:shift)
+      @past_shift.update_attribute(:date, Date.current-5)
+      @job_cash = FactoryGirl.create(:job)
+      @shift_job_cash = FactoryGirl.create(:shift_job, shift_id: 3, job_id: 1)
+
+      assert_equal [3], Shift.completed.map{|i| i.shift_id}
+      @past_shift.destroy
+      @job_cash.destroy
+      @shift_job_cash.destroy
+    end
+
+    should "have a scope incompleted that works" do
+      assert_equal [1,2], Shift.incompleted.map{|i| i.shift_id}.sort
+    end
+
+    should "have a scope for_store that works" do
+      assert_equal [1,2], Shift.for_store(1).map{|i| i.id}.sort
+    end
+
+    should "have a scope for_employee that works" do
+      assert_equal [1,2], Shift.for_employee(1).map{|i| i.id}.sort
+    end
+
+    should "have a scope past that works" do
+      @past_shift = FactoryGirl.create(:shift)
+      @past_shift.update_attribute(:date, Date.current-5)
+
+      assert_equal [3], Shift.past.map{|i| i.id}
+      @past_shift.destroy
+    end
+
+    should "have a scope upcoming that works" do
+      assert_equal [1,2], Shift.upcoming.map{|i| i.id}.sort
+    end
+
+    should "have a scope for_next_days that works" do
+      assert_equal [1], Shift.for_next_days(3).map{|i| i.id}.sort
+      assert_equal [1,2], Shift.for_next_days(6).map{|i| i.id}.sort
+    end
+
+    should "have a scope for_past_days that works" do
+      @past_shift = FactoryGirl.create(:shift)
+      @past_shift.update_attribute(:date, Date.current-5)
+
+      assert_equal [3], Shift.for_past_days(6).map{|i| i.id}.sort
+      @past_shift.destroy
+    end
+
+    should "have a scope chronological that works" do
+      @past_shift = FactoryGirl.create(:shift)
+      @past_shift.update_attribute(:date, Date.current-5)
+
+      assert_equal [3, 1, 2], Shift.chronological.map{|i| i.id}
+      @past_shift.destroy
+    end
+
+    should "have a scope by_store that works" do
+      @akland = FactoryGirl.create(:store, name: "Akland", phone: "412-268-8211")
+      @cindy = FactoryGirl.create(:employee, first_name: "Cindy", last_name: "Crawford", ssn: "084-35-9822", date_of_birth: 17.years.ago.to_date)
+      @another_assign = FactoryGirl.create(:assignment, store: @akland, employee: @cindy, start_date: 4.months.ago.to_date, end_date: nil)
+      @past_shift = FactoryGirl.create(:shift, assignment_id: 2)
+      @past_shift.update_attribute(:date, Date.current-5)
+
+      assert_equal [3,1,2], Shift.by_store.map{|i| i.id}
+      @past_shift.destroy      
+      @another_assign.destroy
+      @akland.destroy
+      @cindy.destroy
+    end
+
+    should "have a scope by_employee that works" do
+      @akland = FactoryGirl.create(:store, name: "Akland", phone: "412-268-8211")
+      @cindy = FactoryGirl.create(:employee, first_name: "Cindy", last_name: "Crawford", ssn: "084-35-9822", date_of_birth: 17.years.ago.to_date)
+      @another_assign = FactoryGirl.create(:assignment, store: @akland, employee: @cindy, start_date: 4.months.ago.to_date, end_date: nil)
+      @past_shift = FactoryGirl.create(:shift, assignment_id: 2)
+      @past_shift.update_attribute(:date, Date.current-5)
+
+      assert_equal [3,1,2], Shift.by_employee.map{|i| i.id}
+      @past_shift.destroy      
+      @another_assign.destroy
+      @akland.destroy
+      @cindy.destroy
     end
   end
 end

@@ -11,6 +11,7 @@ class Employee < ActiveRecord::Base
   has_many :stores, through: :assignments
   has_many :shifts, through: :assignments
   has_one :user
+
   
   # Validations
   validates_presence_of :first_name, :last_name, :date_of_birth, :ssn, :role
@@ -73,9 +74,9 @@ class Employee < ActiveRecord::Base
   end
 
   def check_association
+    self.user.delete unless self.user == nil
     if self.shifts.size == 0
-      self.assignments.current.first.destroy unless self.assignments.current.first == nil
-      self.user.destroy unless self.user == nil
+      self.assignments.current.first.delete unless self.assignments.current.first == nil
     else
       return false
     end

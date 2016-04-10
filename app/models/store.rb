@@ -9,6 +9,8 @@ class Store < ActiveRecord::Base
   has_many :employees, through: :assignments  
   has_many :store_flavors
   has_many :flavors, through: :store_flavors
+  has_many :shifts, through: :assignments
+
   
   # Validations
   # make sure required fields are present

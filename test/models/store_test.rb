@@ -6,6 +6,7 @@ class StoreTest < ActiveSupport::TestCase
   should have_many(:employees).through(:assignments)
   should have_many(:store_flavors)
   should have_many(:flavors).through(:store_flavors)
+  should have_many(:shifts).through(:assignments)
 
   # Test basic validations
   should validate_presence_of(:name)
