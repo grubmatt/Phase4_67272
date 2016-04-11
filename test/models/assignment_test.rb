@@ -122,9 +122,9 @@ class AssignmentTest < ActiveSupport::TestCase
     end
 
     should "end upcoming shifts when assignment is terminated" do
-      @future_shift = FactoryGirl.create(:shift, assignment_id: 3, date: Date.current+2)
+      @future_shift = FactoryGirl.create(:shift, assignment:@promote_ben, date: Date.tomorrow)
       @third_ben = FactoryGirl.create(:assignment, employee: @ben, store: @cmu, start_date: Date.current, end_date: nil, pay_level: 5)
-      assert @future_shift.destroyed?
+      assert_equal false, Shift.exists?(@future_shift.id)
       @third_ben.destroy
       @future_shift.destroy 
     end

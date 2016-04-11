@@ -1,7 +1,8 @@
 class Assignment < ActiveRecord::Base
   # Callbacks
   before_create :end_previous_assignment
-  before_destroy :check_for_shifts
+  before_destroy :check_for_shifts, :destroy_future_shifts
+  after_update :destroy_future_shifts
   after_rollback :terminate_assignment
   
   # Relationships
@@ -32,8 +33,7 @@ class Assignment < ActiveRecord::Base
   # Private methods for callbacks and custom validations
   private  
   def destroy_future_shifts
-    shifts = self.shifts.upcoming
-    shifts.each do |shift|
+    self.shifts.upcoming.each do |shift|
       shift.delete
     end
   end
@@ -44,7 +44,6 @@ class Assignment < ActiveRecord::Base
 
   def terminate_assignment
     self.update_attribute(:end_date, self.start_date.to_date) unless self.destroyed?
-    destroy_future_shifts
   end
 
   def end_previous_assignment
@@ -53,7 +52,6 @@ class Assignment < ActiveRecord::Base
       return true 
     else
       current_assignment.update_attribute(:end_date, self.start_date.to_date)
-      destroy_future_shifts
     end
   end
   

@@ -27,7 +27,7 @@ class Shift < ActiveRecord::Base
   scope :by_employee,   -> { joins(:employee).order("employees.last_name, employees.first_name") }
 
   def completed?
-    return false unless self.shift_jobs.to_a.size == 0
+    self.shift_jobs.to_a.size != 0
   end
 
   def start_now

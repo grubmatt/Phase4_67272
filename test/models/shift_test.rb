@@ -55,13 +55,7 @@ class ShiftTest < ActiveSupport::TestCase
       @past_shift.update_attribute(:date, Date.current-5)
       assert !@past_shift.completed?
 
-      @job_cash = FactoryGirl.create(:job)
-      @shift_job_cash = FactoryGirl.create(:shift_job, shift: @past_shift, job: @job_cash)
-      assert @past_shift.completed?
-     
       @past_shift.destroy
-      @job_cash.destroy
-      @shift_job_cash.destroy
     end
 
     should "Check if end_time automatically set" do

@@ -20,7 +20,7 @@ class UserTest < ActiveSupport::TestCase
   	# create the objects I want with factories
     setup do 
       @ed = FactoryGirl.create(:employee)
-      @gruberman = FactoryGirl.create(:user)
+      @gruberman = FactoryGirl.create(:user, employee: @ed)
     end
     
     # and provide a teardown method as well
